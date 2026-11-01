@@ -1,0 +1,54 @@
+import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
+
+const AuthContext = createContext(null);
+
+export function AuthProvider({ children }) {
+  const [session, setSession] = useState(null);
+  const [profileComplete, setProfileComplete] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  async function checkProfile(currentSession) {
+    if (!currentSession) {
+      setProfileComplete(null);
+      return;
+    }
+
+    const res = await fetch('http://127.0.0.1:4000/api/profiles/me', {
+      headers: { Authorization: `Bearer ${currentSession.access_token}` }
+    });
+
+    if (!res.ok) {
+      setProfileComplete(null);
+      return;
+    }
+
+    const profile = await res.json();
+    setProfileComplete(Boolean(profile.name && profile.year && profile.major));
+  }
+
+  useEffect(() => {
+    supabase.auth.getSession().then(async ({ data }) => {
+      setSession(data.session);
+      await checkProfile(data.session);
+      setLoading(false);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      setSession(newSession);
+      await checkProfile(newSession);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ session, loading, profileComplete, refreshProfileStatus: () => checkProfile(session) }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
