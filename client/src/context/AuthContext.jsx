@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { API_URL } from '../lib/apiUrl';
 
 const AuthContext = createContext(null);
 
@@ -14,7 +15,7 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    const res = await fetch('http://127.0.0.1:4000/api/profiles/me', {
+    const res = await fetch(`${API_URL}/api/profiles/me`, {
       headers: { Authorization: `Bearer ${currentSession.access_token}` }
     });
 

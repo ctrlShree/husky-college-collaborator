@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import { API_URL } from '../lib/apiUrl';
 
 export default function PublicProfile() {
   const { userId } = useParams();
@@ -18,11 +19,11 @@ export default function PublicProfile() {
       const token = sessionData.session?.access_token;
 
       const [profileRes, ownedRes, memberRes] = await Promise.all([
-        fetch(`http://127.0.0.1:4000/api/profiles/${userId}`, {
+        fetch(`${API_URL}/api/profiles/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        fetch(`http://127.0.0.1:4000/api/projects?owner=${userId}`),
-        fetch(`http://127.0.0.1:4000/api/projects/member/${userId}`, {
+        fetch(`${API_URL}/api/projects?owner=${userId}`),
+        fetch(`${API_URL}/api/projects/member/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);

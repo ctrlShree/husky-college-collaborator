@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import { API_URL } from '../lib/apiUrl';
+
 
 export default function PostProject() {
   const [title, setTitle] = useState('');
@@ -41,7 +43,7 @@ export default function PostProject() {
       .map((item) => item.trim())
       .filter((item) => item.length > 0);
 
-    const createRes = await fetch('http://127.0.0.1:4000/api/projects', {
+    const createRes = await fetch(`${API_URL}/api/projects`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +77,7 @@ export default function PostProject() {
         formData.append('images', file);
       }
 
-      const imageRes = await fetch(`http://127.0.0.1:4000/api/projects/${newProject.id}/images`, {
+      const imageRes = await fetch(`${API_URL}/api/projects/${newProject.id}/images`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData

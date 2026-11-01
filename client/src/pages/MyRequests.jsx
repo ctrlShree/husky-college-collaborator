@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { API_URL } from '../lib/apiUrl';
 
 export default function MyRequests() {
   const [projects, setProjects] = useState([]);
@@ -13,7 +14,7 @@ export default function MyRequests() {
         const { data: sessionData } = await supabase.auth.getSession();
         const token = sessionData.session?.access_token;
 
-        const projectsRes = await fetch('http://127.0.0.1:4000/api/projects/mine', {
+        const projectsRes = await fetch(`${API_URL}/api/projects/mine`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const myProjects = await projectsRes.json();
@@ -22,7 +23,7 @@ export default function MyRequests() {
         const requestsMap = {};
         for (const project of myProjects) {
           const reqRes = await fetch(
-            `http://127.0.0.1:4000/api/projects/${project.id}/requests`,
+            `${API_URL}/api/projects/${project.id}/requests`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           requestsMap[project.id] = await reqRes.json();
@@ -43,7 +44,7 @@ export default function MyRequests() {
     const token = sessionData.session?.access_token;
 
     const res = await fetch(
-      `http://127.0.0.1:4000/api/projects/${projectId}/requests/${requestId}`,
+      `${API_URL}/api/projects/${projectId}/requests/${requestId}`,
       {
         method: 'PATCH',
         headers: {

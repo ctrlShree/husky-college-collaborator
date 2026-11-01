@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, MapPin, Laptop, Users } from 'lucide-react';
+import { API_URL } from '../lib/apiUrl';
 
 function getMeetingModeIcon(mode) {
   if (mode === 'remote') return <Laptop size={13} />;
@@ -23,8 +24,7 @@ export default function Browse() {
         const params = new URLSearchParams();
         if (searchTerm) params.set('search', searchTerm);
 
-        const response = await fetch(`http://127.0.0.1:4000/api/projects?${params.toString()}`);
-        if (!response.ok) {
+        const response = await fetch(`${API_URL}/api/projects?${params.toString()}`); if (!response.ok) {
           throw new Error('Failed to fetch projects');
         }
         const data = await response.json();

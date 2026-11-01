@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import { API_URL } from '../lib/apiUrl';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -32,7 +33,7 @@ export default function ProjectDetail() {
       const token = sessionData.session?.access_token;
       const userId = sessionData.session?.user?.id;
 
-      const projectRes = await fetch(`http://127.0.0.1:4000/api/projects/${id}`);
+      const projectRes = await fetch(`${API_URL}/api/projects/${id}`);
 
       if (!projectRes.ok) {
         if (!ignore) {
@@ -46,7 +47,7 @@ export default function ProjectDetail() {
 
       let myRequestData = null;
       if (token) {
-        const myRequestRes = await fetch(`http://127.0.0.1:4000/api/projects/${id}/requests/mine`, {
+        const myRequestRes = await fetch(`${API_URL}/api/projects/${id}/requests/mine`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (myRequestRes.ok) {
@@ -77,7 +78,7 @@ export default function ProjectDetail() {
     const { data: sessionData } = await supabase.auth.getSession();
     const token = sessionData.session?.access_token;
 
-    const res = await fetch(`http://127.0.0.1:4000/api/projects/${id}/requests`, {
+    const res = await fetch(`${API_URL}/api/projects/${id}/requests`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -140,7 +141,7 @@ export default function ProjectDetail() {
       .map((item) => item.trim())
       .filter((item) => item.length > 0);
 
-    const res = await fetch(`http://127.0.0.1:4000/api/projects/${id}`, {
+    const res = await fetch(`${API_URL}/api/projects/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -188,7 +189,7 @@ export default function ProjectDetail() {
       formData.append('images', file);
     }
 
-    const res = await fetch(`http://127.0.0.1:4000/api/projects/${id}/images`, {
+    const res = await fetch(`${API_URL}/api/projects/${id}/images`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: formData
@@ -213,7 +214,7 @@ export default function ProjectDetail() {
     const { data: sessionData } = await supabase.auth.getSession();
     const token = sessionData.session?.access_token;
 
-    const res = await fetch(`http://127.0.0.1:4000/api/projects/${id}/images`, {
+    const res = await fetch(`${API_URL}/api/projects/${id}/images`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -245,7 +246,7 @@ export default function ProjectDetail() {
     const { data: sessionData } = await supabase.auth.getSession();
     const token = sessionData.session?.access_token;
 
-    const res = await fetch(`http://127.0.0.1:4000/api/projects/${id}`, {
+    const res = await fetch(`${API_URL}/api/projects/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../lib/apiUrl';
 
 export default function Profile() {
     const [profile, setProfile] = useState(null);
@@ -22,13 +23,13 @@ export default function Profile() {
             const userId = sessionData.session?.user?.id;
 
             const [profileRes, ownedRes, memberRes] = await Promise.all([
-                fetch('http://127.0.0.1:4000/api/profiles/me', {
+                fetch(`${API_URL}/api/profiles/me`, {
                     headers: { Authorization: `Bearer ${token}` }
                 }),
-                fetch('http://127.0.0.1:4000/api/projects/mine', {
+                fetch(`${API_URL}/api/projects/mine`, {
                     headers: { Authorization: `Bearer ${token}` }
                 }),
-                fetch(`http://127.0.0.1:4000/api/projects/member/${userId}`, {
+                fetch(`${API_URL}/api/projects/member/${userId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
             ]);
@@ -72,7 +73,7 @@ export default function Profile() {
         const { data: sessionData } = await supabase.auth.getSession();
         const token = sessionData.session?.access_token;
 
-        const res = await fetch('http://127.0.0.1:4000/api/profiles/me', {
+        const res = await fetch(`${API_URL}/api/profiles/me`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,7 +116,7 @@ export default function Profile() {
         const formData = new FormData();
         formData.append('avatar', file);
 
-        const res = await fetch('http://127.0.0.1:4000/api/profiles/me/avatar', {
+        const res = await fetch(`${API_URL}/api/profiles/me/avatar`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
             body: formData
