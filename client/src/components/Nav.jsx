@@ -34,6 +34,7 @@ export default function Nav() {
         <NavLink to="/browse" onClick={closeMenu}>Browse</NavLink>
         {session && <NavLink to="/post" onClick={closeMenu}>Post project</NavLink>}
         {session && <NavLink to="/requests" onClick={closeMenu}>My requests</NavLink>}
+        {session && <NavLink to="/ask-ai" onClick={closeMenu}>Ask AI</NavLink>}
         {session && <NavLink to="/profile" onClick={closeMenu}>Profile</NavLink>}
         {session && (
           <button onClick={handleLogout} className="btn-danger">

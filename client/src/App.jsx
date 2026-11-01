@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import ProjectDetail from './pages/ProjectDetail';
 import PublicProfile from './pages/PublicProfile';
 import Signup from './pages/Signup';
+import AskAI from './pages/AskAI';
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/profile/:userId" element={<ProtectedRoute><PublicProfile /></ProtectedRoute>} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/ask-ai" element={<ProtectedRoute><AskAI /></ProtectedRoute>} />
         </Routes>
       </div>
     </BrowserRouter>
