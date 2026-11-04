@@ -18,14 +18,7 @@ export default function App() {
       <div className="page-container">
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route
-            path="/browse"
-            element={
-              <ProtectedRoute>
-                <Browse />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/browse" element={<Browse />} />
           <Route
             path="/post"
             element={

@@ -404,7 +404,13 @@ export default function ProjectDetail() {
         </div>
       )}
 
-      {!isOwner && myRequest === null && (
+      {!isOwner && !currentUserId && (
+        <p>
+          <Link to="/">Log in</Link> to request to join this project.
+        </p>
+      )}
+
+      {!isOwner && currentUserId && myRequest === null && (
         <form onSubmit={handleRequestSubmit}>
           <h2>Request to join</h2>
           {project.roles_needed && project.roles_needed.length > 0 && (
