@@ -9,6 +9,8 @@ export default function MyRequests() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let ignore = false;
+
     async function loadData() {
       try {
         const { data: sessionData } = await supabase.auth.getSession();
@@ -18,25 +20,38 @@ export default function MyRequests() {
           headers: { Authorization: `Bearer ${token}` }
         });
         const myProjects = await projectsRes.json();
-        setProjects(myProjects);
+
+        const requestResults = await Promise.all(
+          myProjects.map((project) =>
+            fetch(`${API_URL}/api/projects/${project.id}/requests`, {
+              headers: { Authorization: `Bearer ${token}` }
+            }).then((res) => res.json())
+          )
+        );
 
         const requestsMap = {};
-        for (const project of myProjects) {
-          const reqRes = await fetch(
-            `${API_URL}/api/projects/${project.id}/requests`,
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-          requestsMap[project.id] = await reqRes.json();
+        myProjects.forEach((project, i) => {
+          requestsMap[project.id] = requestResults[i];
+        });
+
+        if (!ignore) {
+          setProjects(myProjects);
+          setRequestsByProject(requestsMap);
+          setLoading(false);
         }
-        setRequestsByProject(requestsMap);
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        if (!ignore) {
+          setError(err.message);
+          setLoading(false);
+        }
       }
     }
 
     loadData();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   async function handleUpdateStatus(projectId, requestId, status) {
